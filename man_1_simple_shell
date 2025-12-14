@@ -6,7 +6,7 @@ hsh \- our final project for the sprint! - a simple UNIX command interpreter.
 .RI [ options ]
 .SH DESCRIPTION
 .B hsh
-is a minimal command-line interpreter implemented as a learning project.
+is a minimal command-line interpreter implemented as our final project.
 It reads commands from standard input and executes them using the system PATH.
 
 This shell supports basic command execution and a small set of built-ins.
