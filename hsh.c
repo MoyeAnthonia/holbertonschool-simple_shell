@@ -95,11 +95,16 @@ int main(int argc, char **argv, char **envp)
 		if (tokens[0] != NULL)
 		{
 			if (strcmp(tokens[0], "exit") == 0)
-				running = 0; /*Built-in: exit shell*/
+			  running = 0;
+			    /*Built-in: exit shell*/
 			else if (strcmp(tokens[0], "cd") == 0)
 			{
 				do_cd(tokens); /*built in: change directory*/
 			}
+			else if (strcmp(tokens[0], "env") == 0)
+			  {
+			    print_env(envp); /*built in: env*/
+			  }
 			else
 				execute(tokens); /*external commands via fork/exevec */
 		}
