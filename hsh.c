@@ -63,6 +63,75 @@ char *read_input(FILE *stream)
 }
 
 /**
+ * execute - handles external commands & forks & execve
+ * @tokens: tokens
+ * Return: no return
+ */
+void execute(char **tokens)
+{
+  pid_t pid;
+  int status;
+  char *cmd = tokens[0];
+  char *path, *path_copy, *dir;
+  char full_path[1024];
+  /* command has '/' */
+  if (strchr(cmd, '/') != NULL)
+    {
+      if (access(cmd, X_OK) == -1)
+	{
+	  perror(cmd);
+	  return;
+	}
+      pid = fork();
+      if (pid == 0)
+	{
+	  execve(cmd, tokens, environ);
+	  perror(cmd);
+	  exit(1);
+	}
+      else
+	{
+	  wait(&status);
+	  return;
+	}
+    }
+  /* searching PATH */
+  path = getenv("PATH");
+  if (path == NULL)
+    {
+      fprintf(stderr, "%s: command not found\n", cmd);
+      return;
+    }
+  path_copy = strdup(path);
+  if (path_copy == NULL)
+    return;
+  dir = strtok(path_copy, ":");
+  while (dir != NULL)
+    {
+      snprintf(full_path, sizeof(full_path), "%s/%s", dir, cmd);
+      if (access(full_path, X_OK) == 0)
+	{
+	  pid = fork();
+	  if (pid == 0)
+	    {
+	      execve(full_path, tokens, environ);
+	      perror(cmd);
+	      exit(1);
+	    }
+	  else
+	    {
+	      wait(&status);
+	      free(path_copy);
+	      return;
+	    }
+	}
+      dir = strtok(NULL, ":");
+    }
+  free(path_copy);
+  fprintf(stderr, "%s: command not found\n", cmd);
+}
+
+/**
  * * main - main function
  * @argc: argument counter
  * @argv: argument vector
