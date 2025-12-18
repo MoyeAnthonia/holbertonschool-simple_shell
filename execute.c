@@ -101,7 +101,11 @@ int execute(char **tokens, char *prog, int count, int *last_status)
 	int status; /*consumes return from search_path*/
 
 	if (!cmd || !prog)
-		return (0);
+	{
+		status = 127;
+		*last_status = status;
+		return (status);
+	}
 
 	if (strchr(cmd, '/'))
 	{
