@@ -75,6 +75,7 @@ int main(int argc, char **argv, char **envp)
 	char *input = NULL; /*line buffer*/
 	char **tokens = NULL; /*token array*/
 	int count = 0; /*Track command count*/
+	int last_status = 0; /*tracking the status of child/parent program*/
 
 	/*ignore unused parameter*/
 	(void)argc;
@@ -102,7 +103,7 @@ int main(int argc, char **argv, char **envp)
 		/*Decide what we do with said tokens*/
 		if (tokens && tokens[0])
 		{
-			execute(tokens, argv[0], count);
+			execute(tokens, argv[0], count, &last_status);
 		}
 		free(tokens);
 		free(input);

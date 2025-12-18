@@ -49,6 +49,7 @@ void run_command(char *path, char **tokens)
  * @tokens: our tokens
  * @prog: program name
  * @count: cmd count
+ * Return: returns an exit code
  */
 
 int search_path(char *cmd, char **tokens, char *prog, int count)
@@ -90,15 +91,17 @@ int search_path(char *cmd, char **tokens, char *prog, int count)
  * @tokens: our tokens
  * @prog: program name
  * @count: cmd count
+ * @last_status: the status of the child program
+ * Return: returns the status code
  */
 
-void execute(char **tokens, char *prog, int count)
+int execute(char **tokens, char *prog, int count, int *last_status)
 {
 	char *cmd = tokens[0];
 	int status; /*consumes return from search_path*/
 
 	if (!cmd || !prog)
-		return;
+		return (0);
 
 	if (strchr(cmd, '/'))
 	{
@@ -114,7 +117,9 @@ void execute(char **tokens, char *prog, int count)
 		}
 	}
 	else
+	{
 		status = search_path(cmd, tokens, prog, count);
-
-	/*optional for later: last_status = status*/
+		*last_status = status;
+	}
+	return (status);
 }
