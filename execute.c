@@ -6,7 +6,7 @@
  * Return: returns the environment varibles
  */
 
-char get_env_var(char *name)
+char *get_env_var(const char *name)
 {
 	int i;
 	size_t len = strlen(name);
