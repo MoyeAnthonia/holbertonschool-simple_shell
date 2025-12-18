@@ -11,9 +11,9 @@ char get_env_var(char *name)
 	int i;
 	size_t len = strlen(name);
 
-	for (i = 0; i < environ[i]; i++)
+	for (i = 0; environ[i] != NULL; i++)
 	{
-		if (strncmp(environ[i], name, len) == 0 && environ[i][len] == "=")
+		if (strncmp(environ[i], name, len) == 0 && environ[i][len] == '=')
 		{
 			return (environ[i] + len + 1);
 		}
