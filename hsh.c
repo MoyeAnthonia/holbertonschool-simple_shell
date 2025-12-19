@@ -101,7 +101,7 @@ int main(int argc, char **argv, char **envp)
 			if (strcmp(tokens[0], "env") == 0)
 			{	print_env();
 				last_status = 0; }
-			else if (strcmp(tokenjs[0], "exit") == 0)
+			else if (strcmp(tokens[0], "exit") == 0)
 			{
 				running = 0;
 				last_status = 0; }
