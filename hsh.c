@@ -116,9 +116,7 @@ int main(int argc, char **argv, char **envp)
 				last_status = 0; }
 			else if (strcmp(tokens[0], "exit") == 0)
 			{
-				running = 0;
-				shell_cleanup(input, tokens);
-				exit(last_status); }
+				running = 0; } /*shell_cleanup(input, tokens); later*/
 			else
 				execute(tokens, argv[0], count, &last_status); }
 	free(tokens);
