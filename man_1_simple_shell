@@ -1,50 +1,112 @@
 .TH HSH 1 "December 2025" "Simple Shell" "User Commands"
 .SH NAME
-hsh \- our final project for the sprint! - a simple UNIX command interpreter.
+hsh \- a simple UNIX command line interpreter
 .SH SYNOPSIS
 .B hsh
-.RI [ options ]
 .SH DESCRIPTION
 .B hsh
-is a minimal command-line interpreter implemented as our final project.
-It reads commands from standard input and executes them using the system PATH.
+is a minimal UNIX command line interpreter implemented in C.
+It reads command lines from standard input and executes programs
+using
+.BR fork (2)
+and
+.BR execve (2).
 
-This shell supports basic command execution and a small set of built-ins.
-.SH OPTIONS
-This shell currently accepts no command-line options.
-.SH BUILTINS
+The shell supports execution of external commands, argument parsing,
+searching executable files using the
+.B PATH
+environment variable, and a limited set of built-in commands.
+
+The shell operates in both interactive mode (with a prompt) and
+non-interactive mode (reading from standard input).
+
+.SH FEATURES
+.TP
+\- Displays a prompt when running interactively
+.TP
+\- Executes external programs using absolute paths or PATH lookup
+.TP
+\- Handles command-line arguments
+.TP
+\- Prints appropriate error messages when commands are not found
+.TP
+\- Returns correct exit status codes for executed commands
+
+.SH BUILT-IN COMMANDS
 .TP
 .B exit
 Exit the shell.
+The shell exits using the status of the last executed command.
+No arguments are supported.
 .TP
 .B env
-Print the current environment.
-.SH USAGE
-Run the shell and enter commands at the prompt:
+Print the current environment, one variable per line.
 
+.SH USAGE
+Run the shell interactively:
+.PP
 .nf
 $ ./hsh
 $ ls -l
-$ echo "hello"
+$ /bin/ls
+$ env
+$ exit
 .fi
+
+Run the shell non-interactively:
+.PP
+.nf
+$ echo "/bin/ls" | ./hsh
+.fi
+
 .SH RETURN VALUE
-Returns 0 on normal exit. Errors return a non-zero value where applicable.
-.SH ERRORS
-Error messages are written to standard error.
+The shell exits with the status of the last executed command.
+If a command is not found, an exit status of 127 is returned.
+
+.SH ERROR HANDLING
+If a command cannot be found, an error message is printed to standard error
+in the following format:
+.PP
+.nf
+program_name: command_number: command: not found
+.fi
+
+The shell does not fork if a command does not exist.
+
 .SH ENVIRONMENT
 .TP
 .B PATH
-Used to locate executable commands.
+Used to locate executable commands when no slash (/) is present in the command.
+.TP
+.B environ
+Used internally to pass the environment to executed programs.
+
+.SH LIMITATIONS
+This shell intentionally does not support:
+.PP
+\- Pipes
+.br
+\- Redirections
+.br
+\- Job control
+.br
+\- Command chaining
+.br
+\- Quoting or escaping
+.br
+\- Wildcards
+.br
+\- Built-ins other than
+.B exit
+and
+.B env
+
 .SH FILES
 None.
-.SH EXAMPLES
-.nf
-$ ./hsh
-$ pwd
-$ env
-.fi
+
 .SH AUTHORS
-Written by Andrew Kasapidis.
+Written by Andrew Kasapidis, Uliana Deshin, and Anthonia Ifoeze.
+
 .SH BUGS
-This shell is intentionally minimal and does not support advanced features
-such as pipes, redirection, or job control. We're only in verion 0.1!
+This shell is intentionally minimal and designed for educational purposes.
+Behaviour is undefined for unsupported syntax.
